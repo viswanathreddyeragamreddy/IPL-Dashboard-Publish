@@ -1,4 +1,3 @@
-// Write your code here
 import './index.css'
 import Loader from 'react-loader-spinner'
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
@@ -23,7 +22,10 @@ class Home extends Component {
       imageUrl: eachData.team_image_url,
       id: eachData.id,
     }))
-    this.setState({teamsData: updatedData, isLoading: false})
+
+    setTimeout(() => {
+      this.setState({teamsData: updatedData, isLoading: false})
+    }, 0)
   }
 
   renderTeamsList = () => {
@@ -38,7 +40,7 @@ class Home extends Component {
   }
 
   renderLoader = () => (
-    <div testid="loader" className="loader-container">
+    <div data-testid="loader" className="loader-container">
       <Loader type="Rings" color="#00BFFF" height={80} width={80} />
     </div>
   )
