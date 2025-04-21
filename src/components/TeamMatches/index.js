@@ -20,7 +20,6 @@ class TeamMatches extends Component {
     this.getTeamMatches()
   }
 
-  // Formatting the data for each match
   getFormattedData = data => ({
     umpires: data.umpires,
     result: data.result,
@@ -35,7 +34,6 @@ class TeamMatches extends Component {
     matchStatus: data.match_status,
   })
 
-  // Fetching team match data from the API
   getTeamMatches = async () => {
     const {match} = this.props
     const {params} = match
@@ -52,11 +50,9 @@ class TeamMatches extends Component {
       ),
     }
 
-    // Update the state after the data is fetched
     this.setState({teamMatchesData: formattedData, isLoading: false})
   }
 
-  // Count the number of matches based on status (Won, Lost, Drawn)
   getNoOfMatches = value => {
     const {teamMatchesData} = this.state
     const {latestMatch, recentMatches} = teamMatchesData
@@ -67,8 +63,14 @@ class TeamMatches extends Component {
     return result
   }
 
-  // Generate Pie Chart Data based on match results
   generatePieChartData = () => {
+    const {teamMatchesData} = this.state
+    const {latestMatch, recentMatches} = teamMatchesData
+
+    if (!latestMatch || !recentMatches || recentMatches.length === 0) {
+      return []
+    }
+
     const won = Number(this.getNoOfMatches('Won') || 0)
     const lost = Number(this.getNoOfMatches('Lost') || 0)
     const drawn = Number(this.getNoOfMatches('Drawn') || 0)
@@ -80,7 +82,6 @@ class TeamMatches extends Component {
     ]
   }
 
-  // Render the recent matches list
   renderRecentMatchesList = () => {
     const {teamMatchesData} = this.state
     const {recentMatches} = teamMatchesData
@@ -94,18 +95,18 @@ class TeamMatches extends Component {
     )
   }
 
-  // Render the team match details (Banner, Latest match, Pie chart)
   renderTeamMatches = () => {
     const {teamMatchesData} = this.state
     const {teamBannerURL, latestMatch} = teamMatchesData
+
+    const pieData = this.generatePieChartData()
 
     return (
       <div className="responsive-container">
         <img src={teamBannerURL} alt="team banner" className="team-banner" />
         <LatestMatch latestMatchData={latestMatch} />
         <h1 className="latest-match-heading mt-3">Team Statistics</h1>
-        {/* Ensure PieChart component is properly passed the data */}
-        <PieChart data={this.generatePieChartData()} />
+        {pieData.length > 0 && <PieChart data={pieData} />}
         {this.renderRecentMatchesList()}
         <Link to="/">
           <button type="button" className="btn btn-outline-info mb-2">
@@ -116,14 +117,12 @@ class TeamMatches extends Component {
     )
   }
 
-  // Render the loader when the data is being fetched
   renderLoader = () => (
     <div data-testid="loader" className="loader-container">
       <Loader type="Oval" color="#ffffff" height={50} />
     </div>
   )
 
-  // Get route class name based on the team ID
   getRouteClassName = () => {
     const {match} = this.props
     const {params} = match

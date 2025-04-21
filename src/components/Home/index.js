@@ -23,9 +23,7 @@ class Home extends Component {
       id: eachData.id,
     }))
 
-    setTimeout(() => {
-      this.setState({teamsData: updatedData, isLoading: false})
-    }, 0)
+    this.setState({teamsData: updatedData, isLoading: false})
   }
 
   renderTeamsList = () => {
